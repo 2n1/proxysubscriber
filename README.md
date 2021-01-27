@@ -24,7 +24,7 @@
 
 ## 演示
 
-[ps.i2n1.cf](https://ps.i2n1.cf)
+[ps.i2n1.cf](https://ps.i2n1.cf/login)
 
 登录信息
 
