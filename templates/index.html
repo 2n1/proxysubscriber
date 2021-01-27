@@ -1,0 +1,59 @@
+{{template "header.html" .}}
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">控制台</h1>
+</div>
+<!-- Content Row -->
+<div class="row">
+
+    <!-- Earnings (Monthly) Card Example -->
+    <div class="col-xl-6 col-md-12 mb-6">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xl-left font-weight-bold text-primary text-uppercase mb-1">
+                            分组</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            {{.groupCount}}
+                            <a href="/man/group/add" class="btn btn-primary btn-sm">
+                                <i class="fas fa-plus-square"></i>
+                                添加分组
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Earnings (Monthly) Card Example -->
+    <div class="col-xl-6 col-md-12 mb-6">
+        <div class="card border-left-danger shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xl-left font-weight-bold text-danger text-uppercase mb-1">
+                            节点</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                            {{.nodeCount}}
+                            <a href="/man/node/add" class="btn btn-danger btn-sm">
+                                <i class="fas fa-plus-square"></i>
+                                添加节点
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+{{template "footer.html" .}}

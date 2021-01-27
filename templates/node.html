@@ -1,0 +1,47 @@
+{{template "header.html" .}}
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">{{.title}}</h1>
+</div>
+{{ if ne .msg "" }}
+<div class="alert alert-primary" role="alert">
+    {{.msg}}
+</div>
+{{ end}}
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">节点</th>
+        <th scope="col">类型</th>
+        <th scope="col">分组</th>
+        <th scope="col">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{ range .paginate.Data }}
+    <tr>
+        <td>{{.ID}}</td>
+        <td width="30%">{{.Name}}</td>
+        <td>{{.NodeType}}</td>
+        <td>{{.GroupName}}</td>
+        <td>
+            <a href="/man/node/edit/{{.ID}}" class="btn btn-sm btn-primary">修改</a>
+            <a href="/man/node/del/{{.ID}}" class="btn btn-sm btn-primary" onclick="if(!confirm('确定删除？')){return false;}">删除</a>
+        </td>
+    </tr>
+    {{ end }}
+    </tbody>
+</table>
+{{ if gt .paginate.TotalPage 1 }}
+<nav aria-label="...">
+    <ul class="pagination pagination-sm justify-content-end">
+        {{ range .paginate.PageList }}
+        <li class="page-item" aria-current="page">
+            <a class="page-link" href="/man/node?page={{.}}&group={{$.group}}">{{.}}</a>
+        </li>
+        {{ end }}
+    </ul>
+</nav>
+{{end}}
+{{template "footer.html" .}}

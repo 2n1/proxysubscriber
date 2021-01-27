@@ -1,0 +1,41 @@
+{{template "header.html" .}}
+<h1 class="h3 mb-4 text-gray-800">优选IP</h1>
+{{ if ne .msg "" }}
+<div class="alert alert-primary" role="alert">
+    {{.msg}}
+</div>
+{{ end}}
+<form action="/man/cfip" method="post">
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="cu_ip">联通IP</label>
+            <input type="text" class="form-control" id="cu_ip" name="cu_ip" value="{{.cf.ChinaUnicomIP}}">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="cu_label">联通标签</label>
+            <input type="text" class="form-control" id="cu_label" name="cu_label" value="{{.cf.ChinaUnicomLable}}">
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="ct_ip">电信IP</label>
+            <input type="text" class="form-control" id="ct_ip" name="ct_ip"  value="{{.cf.ChinaTelecomIP}}">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="ct_label">电信标签</label>
+            <input type="text" class="form-control" id="ct_label" name="ct_label"  value="{{.cf.ChinaTelecomLable}}">
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="cm_ip">联通IP</label>
+            <input type="text" class="form-control" id="cm_ip" name="cm_ip" value="{{.cf.ChinaMobileIP}}">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="cm_label">联通标签</label>
+            <input type="text" class="form-control" id="cm_label" name="cm_label" value="{{.cf.ChinaMobileLable}}">
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">提交</button>
+</form>
+{{template "footer.html" .}}

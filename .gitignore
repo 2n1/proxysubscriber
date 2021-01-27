@@ -4,3 +4,5 @@
 .idea
 /config.json
 *.vim
+*.db
+/bin

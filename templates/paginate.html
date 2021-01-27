@@ -1,0 +1,11 @@
+{{ if gt .paginate.TotalPage 1 }}
+<nav aria-label="...">
+    <ul class="pagination pagination-sm">
+        {{ range .paginate.PageList }}
+        <li class="page-item" aria-current="page">
+           <a class="page-link" href="#">{{.}}</a>
+        </li>
+        {{ end }}
+    </ul>
+</nav>
+{{end}}

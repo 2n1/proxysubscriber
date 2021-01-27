@@ -1,0 +1,14 @@
+{
+  "addr": "127.0.0.1:11544",
+  "page_size": 15,
+  "mode": "release",
+  "db_file": "./ps.db",
+  "sql_file": "./ps.sql",
+  "site_name": "Proxy Subscriber",
+  "base_url": "https://i2n1.cf",
+  "is_demo": false,
+  "session": {
+    "secret_key": "iuNeJTX9tlKSp8y7hWvX",
+    "name": "proxy_subscriber"
+  }
+}

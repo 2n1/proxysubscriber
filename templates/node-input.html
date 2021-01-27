@@ -1,0 +1,154 @@
+{{template "header.html" .}}
+<div class="row">
+    <div class="col-8">
+        <h1 class="h3 mb-4 text-gray-800">{{.title}}</h1>
+    </div>
+    <div class="col text-right">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="display_full" value="1" v-model="displayFull">
+            <label class="form-check-label" for="display_full">
+                完整模式
+            </label>
+        </div>
+    </div>
+</div>
+
+<form action="/man/node/{{.action}}" method="post">
+    <div class="form-group">
+        <label for="name">节点名称</label>
+        <input type="text" class="form-control" id="name" name="name" required value="{{.entity.Name}}">
+    </div>
+    <div class="form-group">
+        <label for="group_id">所属分组</label>
+        <select id="group_id" name="group_id" class="form-control">
+            <option value="">请选择</option>
+            {{ range .groups }}
+            <option value="{{.ID}}"{{if $.isEdit}}{{if eq .ID $.entity.GroupID}} selected{{end}}{{end}}>{{.Name}}</option>
+            {{ end }}
+        </select>
+    </div>
+    <div class="form-group">
+        <label>类型</label>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="type" id="type_vmess" value="vmess" v-model="type">
+            <label class="form-check-label" for="type_vmess">
+                vmess + CDN + WSS
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="type" id="type_trojan" value="trojan" v-model="type">
+            <label class="form-check-label" for="type_trojan">
+                Trojan
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="type" id="type_ss" value="ss" v-model="type">
+            <label class="form-check-label" for="type_ss">
+                Shadowsocks
+            </label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="server">服务器地址</label>
+        <input type="text" class="form-control" id="server" name="server" required value="{{.entity.Server}}">
+    </div>
+    <div class="form-group">
+        <label for="port">端口</label>
+        <input type="number" class="form-control" id="port" name="port" required value="{{if .isEdit}}{{.entity.Port}}{{else}}443{{end}}">
+    </div>
+    <div class="form-group">
+        <label for="password">
+            <span v-if="v2ray">UUID</span>
+            <span v-else>密码</span>
+        </label>
+        <input type="text" class="form-control" id="password" name="password" required value="{{.entity.Password}}">
+    </div>
+    <div class="form-group" v-if="ss || (v2ray && displayFull)">
+        <label for="cipher">加密算法</label>
+        <select class="form-control" id="cipher" name="cipher" v-model="cipher">
+            <option v-for="c in ciphers" :value="c" :key="c">/{c}/</option>
+        </select>
+    </div>
+
+    <div class="form-group" v-if="(v2ray || trojan) && displayFull">
+        <label for="sni">SNI</label>
+        <input type="text" class="form-control" id="sni" name="sni" placeholder="留空表示使用服务器地址">
+    </div>
+
+    <div class="form-group" v-if="v2ray">
+        <label for="alter_id">alterID</label>
+        <input type="number" class="form-control" id="alter_id" name="alter_id" required value="64">
+    </div>
+    <div class="form-group" v-if="v2ray">
+        <label for="ws_path">Websocket 路径</label>
+        <input type="text" class="form-control" id="ws_path" name="ws_path" required value="/">
+    </div>
+    <div class="form-group" v-if="v2ray && displayFull">
+        <label for="ws_host">Websocket 主机</label>
+        <input type="text" class="form-control" id="ws_host" name="ws_host" placeholder="留空表示使用服务器地址">
+    </div>
+
+    <div class="form-group">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="cf_ip" name="cf_ip" value="1" checked>
+            <label class="form-check-label" for="cf_ip">
+                允许该节点启用优选IP
+            </label>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">提交</button>
+</form>
+{{template "footer.html" .}}
+<script src="/static/js/vue.js"></script>
+<script>
+    new Vue({
+        el: "#app",
+        data: {
+    {{ if .isEdit }}
+            type: '{{.entity.NodeType}}',
+                {{else}}
+    type: 'vmess',
+    {{end}}
+            displayFull: false,
+                {{if .isEdit}}
+            cipher: '{{.entity.Cipher}}',
+                {{ else }}
+    cipher: 'auto',
+    {{end}}
+        },
+        computed: {
+            v2ray: function () {
+                return this.type == 'vmess';
+            },
+            trojan: function () {
+                return this.type == 'trojan';
+            },
+            ss: function () {
+                return this.type == 'ss';
+            },
+            ciphers: function () {
+                if (this.v2ray) {
+                    return ['auto', 'aes-128-gcm', 'chacha20-poly1305', 'none'];
+                }
+                return [
+                    'aes-128-gcm', 'aes-192-gcm', 'aes-256-gcm',
+                    'aes-128-cfb', 'aes-192-cfb', 'aes-256-cfb',
+                    'aes-128-ctr', 'aes-192-ctr', 'aes-256-ctr',
+                    'rc4-md5', 'chacha20-ietf', 'xchacha20',
+                    'chacha20-ietf-poly1305', 'xchacha20-ietf-poly1305'
+                ];
+            }
+        },
+        watch:{
+          type:function (v) {
+                  if(v == 'vmess') {
+                      this.cipher = 'auto';
+                      return;
+                  }
+                  this.cipher = 'chacha20-ietf-poly1305';
+          }
+        },
+        delimiters: ['/{', '}/']
+    });
+</script>

@@ -1,0 +1,87 @@
+{{template "header.html" .}}
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">订阅地址</h1>
+</div>
+
+<div class="form-group">
+    <label for="url">订阅地址</label>
+    <input type="text" class="form-control is-valid" id="url" v-model="url">
+</div>
+<div class="form-group">
+    <label>客户端</label>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="client" id="client_v2ray" value="v2ray" v-model="client">
+        <label class="form-check-label" for="client_v2ray">
+            v2ray
+        </label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="client" id="client_clash" value="clash" v-model="client">
+        <label class="form-check-label" for="client_clash">
+            clash
+        </label>
+    </div>
+</div>
+<div class="form-group">
+    <label>优选IP</label>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="cf" id="cf_cu" value="cu" v-model="cf">
+        <label class="form-check-label" for="cf_cu">
+            中国联通
+        </label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="cf" id="cf_ct" value="ct" v-model="cf">
+        <label class="form-check-label" for="cf_ct">
+            中国电信
+        </label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="cf" id="cf_cm" value="cm" v-model="cf">
+        <label class="form-check-label" for="cf_cm">
+            中国移动
+        </label>
+    </div>
+
+</div>
+<div class="form-group">
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="cf_only" name="cf_only" value="1" v-model="cf_only">
+        <label class="form-check-label" for="cf_only">
+            启用优选IP后，隐藏原始节点
+        </label>
+    </div>
+</div>
+
+<form action="/man/group/refresh-url/{{.groupID}}" method="post" v-on:submit.prevent="submit">
+    <input type="hidden" name="group_id" value="{{.groupID}}">
+    <input type="submit" value="重新生成" class="btn btn-secondary">
+</form>
+{{template "footer.html" .}}
+<script src="/static/js/vue.js"></script>
+<script>
+    new Vue({
+        el: "#app",
+        data: {
+            client: "clash",
+            cf: [],
+            cf_only: true,
+            surl: "{{.url}}",
+        },
+        computed: {
+            url: function () {
+                return "{{.domain}}/s/" + this.surl + "?c=" + this.client + "&cf=" + this.cf.join(",") + "&co=" + (this.cf_only ? 1 : 0);
+            }
+        },
+        methods: {
+            submit: function () {
+                var $this = this;
+                $.post("/man/group/refresh-url/{{.groupID}}", {}, function (j) {
+                    $this.surl=j.url;
+                }, "json")
+            }
+        },
+        delimiters: ['/{', '}/']
+    })
+</script>
